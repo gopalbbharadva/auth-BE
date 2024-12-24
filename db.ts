@@ -1,4 +1,5 @@
-const { Client } = require('pg')
+// const { Client } = require('pg')
+import { Client } from 'pg'
 
 const client = new Client({
     user: 'gopal_pg',  // owner 
@@ -20,10 +21,10 @@ const createUserTable = async () => {
         await client.connect();
         await client.query(createTableQuery)
     } catch (error) {
-        console.log(error,'error')
+        console.log(error, 'error')
     }
 }
 
 createUserTable();
 
-module.exports = client
+export default client 

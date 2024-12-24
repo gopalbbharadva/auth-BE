@@ -1,9 +1,13 @@
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const cors = require('cors')
-require('dotenv').config();
-const { signIn, signUp, getUsers } = require('./routes')
+
+// const express = require('express')
+import express, { Request } from 'express'
+import bodyParser from 'body-parser'
+import dotenv from 'dotenv'
+dotenv.config();
+import { signIn, signUp, getUsers } from './routes'
+import cors from 'cors'
+
 
 const app = express()
 
@@ -11,23 +15,23 @@ app.use(bodyParser.text())
 app.use(bodyParser.json())
 app.use(cors());
 
-app.use((req, res, next) => {
+interface AuthRequest extends Request {
+    headers: {
+        authorization: string;
+    }
+}
+
+const checkAuthToken = (req: AuthRequest, res: any, next: any) => {
     const authToken = req.headers.authorization;
-    console.log(authToken, 'authToken')
     if (!authToken) {
         res.status(403).send(
             { message: 'Auth token required to access this route' })
         return;
     }
     next();
-})
+}
 
-
-// app.use((req, res, next) => {
-//     next();
-// })
-
-app.get('/users', getUsers)
+app.get('/users', checkAuthToken, getUsers)
 
 // Error handling in login 
 // case 1: user name and password both required
