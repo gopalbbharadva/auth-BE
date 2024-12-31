@@ -1,7 +1,7 @@
 
 
 // const express = require('express')
-import express, { Request } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 dotenv.config();
@@ -17,11 +17,11 @@ app.use(cors());
 
 interface AuthRequest extends Request {
     headers: {
-        authorization: string;
+        authorization?: string;
     }
 }
 
-const checkAuthToken = (req: AuthRequest, res: any, next: any) => {
+const checkAuthToken = (req: AuthRequest, res: Response, next: NextFunction) => {
     const authToken = req.headers.authorization;
     if (!authToken) {
         res.status(403).send(
